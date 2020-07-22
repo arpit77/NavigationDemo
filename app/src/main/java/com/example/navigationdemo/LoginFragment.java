@@ -1,5 +1,7 @@
 package com.example.navigationdemo;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,6 +20,8 @@ public class LoginFragment extends Fragment {
 
     private EditText mobile, password;
     NavController navController;
+    public static final String MyPREFERENCES = "MyPrefs" ;
+    SharedPreferences sharedPreferences;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,11 +41,21 @@ public class LoginFragment extends Fragment {
         mobile = view.findViewById(R.id.mobile);
         password = view.findViewById(R.id.password);
         navController = Navigation.findNavController(view);
+        sharedPreferences = getContext().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         view.findViewById(R.id.login).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (password.getText().toString().equals("1234") && mobile.getText().toString().equals("7023875303")){
-                    navController.navigate(R.id.homeFragment);
+                if (password.getText().toString().equals("1234") && mobile.getText().toString().equals("1234567890")){
+//                    navController.navigate(R.id.homeFragment);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                    editor.putString("login", "Yes");
+                    editor.commit();
+
+                    if (getActivity() instanceof MainActivity){
+                        getActivity().onBackPressed();
+                        ((MainActivity) getActivity()).recreate();
+                    }
                 }
 
                 else{
